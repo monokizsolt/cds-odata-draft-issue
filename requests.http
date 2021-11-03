@@ -1,0 +1,23 @@
+### Create an item via the raw service
+POST http://localhost:4004/raw/header
+Content-Type: application/json
+
+{
+    "title": "my test",
+    "items": [
+        {"title": "my item 1"},
+        {"title": "my item 2"}
+    ]
+}
+
+### Query the draft enabled service with an expand (works)
+GET http://localhost:4004/test/header?$expand=items
+
+### Query the draft enabled service with an expand (works)
+GET http://localhost:4004/test/header?$filter=(IsActiveEntity%20eq%20false%20or%20SiblingEntity/IsActiveEntity%20eq%20null)&$expand=items
+
+### Add an expand also to the association (fails)
+GET http://localhost:4004/test/header?$filter=(IsActiveEntity%20eq%20false%20or%20SiblingEntity/IsActiveEntity%20eq%20null)&$expand=items,status
+
+### Expand wildcard (crashes)
+GET http://localhost:4004/test/header?$expand=*
