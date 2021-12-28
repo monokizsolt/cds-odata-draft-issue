@@ -2,19 +2,19 @@ using { cuid } from '@sap/cds/common';
 
 namespace test;
 
-entity header : cuid {
-    title : String;
+entity Header : cuid {
+    name : String;
 
-    items : Composition of many item on items.parent = ID;
-    status : Association to status;
+    items : Composition of many Item on items.parent = $self;
+    user : Association to User;
 }
 
-entity item : cuid {
-    parent : UUID;
-    title : String;
+entity Item : cuid {
+    name : String;
+
+    parent : Association to Header;
 }
 
-@cds.autoexpose
-entity status : cuid {
-    title : String;
+entity User : cuid {
+    name : String;
 }

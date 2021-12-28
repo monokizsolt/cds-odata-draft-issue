@@ -1,23 +1,25 @@
-### Create an item via the raw service
-POST http://localhost:4004/raw/header
-Content-Type: application/json
+### ISSUE 1:
+### expand=* works without draft
+GET http://localhost:4004/raw/header?$expand=*
 
-{
-    "title": "my test",
-    "items": [
-        {"title": "my item 1"},
-        {"title": "my item 2"}
-    ]
-}
-
-### Query the draft enabled service with an expand (works)
-GET http://localhost:4004/test/header?$expand=items
-
-### Query the draft enabled service with an expand (works)
-GET http://localhost:4004/test/header?$filter=(IsActiveEntity%20eq%20false%20or%20SiblingEntity/IsActiveEntity%20eq%20null)&$expand=items
-
-### Add an expand also to the association (fails)
-GET http://localhost:4004/test/header?$filter=(IsActiveEntity%20eq%20false%20or%20SiblingEntity/IsActiveEntity%20eq%20null)&$expand=items,status
-
-### Expand wildcard (crashes)
+### expand=* crashes with draft: [ERROR] invalid column name: C.ISACTIVEENTITY
 GET http://localhost:4004/test/header?$expand=*
+
+### ISSUE 2: (Fiori Elements List Report sort by user name)
+### this sorts by header name, not by user name!
+GET http://localhost:4004/test/header?$filter=(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)&$expand=user&$orderby=user/name
+
+### it works as expected without the filter:
+GET http://localhost:4004/test/header?&$expand=user&$orderby=user/name
+
+### ISSUE 3:
+### crashes: [INTERNAL ERROR] TypeError: Cannot read property 'op' of undefined
+GET http://localhost:4004/test/header?$filter=(IsActiveEntity eq true or SiblingEntity/IsActiveEntity eq null)
+
+### ISSUE 4:
+### Error: Bad Request
+GET http://localhost:4004/test/header?$filter=(SiblingEntity/IsActiveEntity eq null)
+
+### ISSUE 5:
+### SqlError: invalid column name: B.ISACTIVEENTITY
+GET http://localhost:4004/test/header?$expand=SiblingEntity

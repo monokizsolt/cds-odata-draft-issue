@@ -6,10 +6,13 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@sap/cds": "^5",
-    "express": "^4"
+    "@sap/cds": "^5.7.4",
+    "@sap/hana-client": "^2.11.14",
+    "express": "^4.17.2",
+    "hdb": "^0.18.3"
   },
   "devDependencies": {
+    "@sap/hdi-deploy": "^4.2.3",
     "sqlite3": "^5.0.2"
   },
   "scripts": {
@@ -43,9 +46,12 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "sqlite",
+        "kind": "hana",
         "model": "*"
       }
+    },
+    "hana": {
+      "deploy-format": "hdbtable"
     }
   }
 }
